@@ -80,5 +80,123 @@
   },
   "footer": {
     "source": "Código en GitHub"
+  },
+  "onboarding": {
+    "progress": "Paso {current} de {total}",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "welcome": {
+      "title": "Assalamu alaikum, soy Yasmin",
+      "text": "Cuidaré tu jardín contigo. Te haré unas preguntas rápidas para preparar un plan a tu medida. Puedes cambiarlo cuando quieras.",
+      "nameLabel": "¿Cómo te llamas?",
+      "namePlaceholder": "Tu nombre"
+    },
+    "known": {
+      "question": "Encantada, {name}. ¿Ya has memorizado alguna sura?",
+      "options": {
+        "yes": "Sí, alguna",
+        "no": "No, todavía no"
+      }
+    },
+    "surahs": {
+      "question": "¿Cuáles? Márcalas y las plantaremos en tu jardín.",
+      "shortcutAmma": "Juz' Amma (78–114)",
+      "shortcutTabarak": "Juz' Tabarak (67–77)",
+      "clear": "Quitar todas",
+      "typeLabel": "¿Te sabes los números? Escríbelos, por ejemplo: 1, 18, 78-114",
+      "typeAdd": "Añadir",
+      "selected": "{n} suras marcadas",
+      "none": "Marca al menos una sura para continuar."
+    },
+    "review": {
+      "question": "¿Quieres repasar las suras que ya sabes?",
+      "options": {
+        "yes": "Sí, inclúyelas en mi repaso",
+        "no": "No, solo lo nuevo"
+      },
+      "hint": "Repasar es regar: así no se marchitan."
+    },
+    "goal": {
+      "question": "¿Qué te gustaría memorizar?",
+      "options": {
+        "quran": "El Corán completo",
+        "amma": "Juz' Amma",
+        "juz": "Un juz' concreto"
+      },
+      "juzLabel": "¿Qué juz'?",
+      "juzOption": "Juz' {n}"
+    },
+    "direction": {
+      "question": "¿Por dónde quieres empezar?",
+      "options": {
+        "start": "Desde Al-Fatiha",
+        "end": "Desde el final (Juz' Amma)"
+      },
+      "hint": "Mucha gente empieza por el final, porque las suras son más cortas."
+    },
+    "method": {
+      "question": "¿Cómo prefieres memorizar?",
+      "options": {
+        "ayah": "Por aleyas",
+        "third": "Por tercios de página",
+        "half": "Por media página",
+        "page": "Por página"
+      },
+      "hint": "Una página del mushaf tiene 15 líneas. Un tercio son 5 líneas."
+    },
+    "perDay": {
+      "question": "¿Cuánto quieres memorizar al día?",
+      "units": {
+        "ayah": "{n} aleyas",
+        "third": "{n} tercio|{n} tercios",
+        "half": "{n} media página|{n} medias páginas",
+        "page": "{n} página|{n} páginas"
+      },
+      "hints": {
+        "ayah": "Cada aleya suele llevar entre 3 y 5 minutos, según su longitud.",
+        "third": "Un tercio suele llevar entre 15 y 25 minutos.",
+        "half": "Media página suele llevar entre 25 y 40 minutos.",
+        "page": "Una página suele llevar entre 45 y 90 minutos."
+      },
+      "review": "Cuenta también con un rato para el repaso."
+    },
+    "days": {
+      "question": "¿Cuántos días a la semana?",
+      "option": "{n} días",
+      "optionAll": "Todos los días"
+    },
+    "mode": {
+      "question": "¿Cómo quieres que te acompañe?",
+      "options": {
+        "guided": "Guíame día a día",
+        "free": "Prefiero ir a mi aire"
+      },
+      "hints": {
+        "guided": "Cada día te diré qué memorizar y qué repasar.",
+        "free": "Tú eliges qué memorizar. Yo te recuerdo los repasos."
+      }
+    },
+    "summary": {
+      "title": "Tu jardín está listo",
+      "sign": "El jardín de {name}",
+      "plants": "Ya tiene {n} plantas: las suras que te sabes.",
+      "goals": {
+        "quran": "el Corán completo",
+        "amma": "Juz' Amma",
+        "juz": "el juz' {n}"
+      },
+      "estimate": "A este ritmo, terminarás {goal} hacia {date}.",
+      "approx": "Es una estimación: el plan se ajustará a tu ritmo real.",
+      "done": "¡Ya te sabes lo que has elegido! Vuelve atrás y elige otro objetivo.",
+      "save": "Guardar mi plan",
+      "saved": "Plan guardado. Muy pronto podrás empezar tu primera lección.",
+      "home": "Volver al inicio"
+    },
+    "labels": {
+      "method": "Método",
+      "pace": "Ritmo",
+      "mode": "Modo",
+      "paceValue": "{amount} · {days} días/semana"
+    }
   }
 }
