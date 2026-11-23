@@ -258,5 +258,47 @@
       "text": "Answer a few questions from Aya and we'll prepare a plan for you.",
       "cta": "Start my garden"
     }
+  },
+    "profile": {
+    "title": "Your profile",
+    "character": "Your character",
+    "withHijab": "With hijab",
+    "withoutHijab": "Without hijab",
+    "skin": "Skin tone",
+    "hijabColor": "Hijab colour",
+    "hairStyle": "Hairstyle",
+    "hairStyles": {
+      "long": "Long hair",
+      "bob": "Bob",
+      "bun": "Bun",
+      "curly": "Curly"
+    },
+    "hairColor": "Hair colour",
+    "scarf": "Scarf colour",
+    "dress": "Dress colour",
+    "accessory": "Accessory",
+    "accessories": {
+      "none": "None",
+      "daisy": "Daisy",
+      "rose": "Rose",
+      "bow": "Bow"
+    },
+    "save": "Save",
+    "saved": "Saved",
+    "plan": "Your plan",
+    "finish": "Blooms on",
+    "changePlan": "Change my plan",
+    "noPlan": "Create my plan",
+    "account": {
+      "title": "Keep your garden",
+      "text": "Right now your garden only lives in this browser. Create an account so you never lose it and can see it on your phone.",
+      "cta": "Create account"
+    },
+    "soon": "Coming soon",
+    "settings": {
+      "language": "Language",
+      "reciter": "Reciter",
+      "reminders": "Reminders"
+    }
   }
 }

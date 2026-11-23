@@ -258,5 +258,47 @@
       "text": "Responde unas preguntas a Aya y te preparamos un plan a tu medida.",
       "cta": "Empezar mi jardín"
     }
+  },
+    "profile": {
+    "title": "Tu perfil",
+    "character": "Tu personaje",
+    "withHijab": "Con hijab",
+    "withoutHijab": "Sin hijab",
+    "skin": "Tono de piel",
+    "hijabColor": "Color del hijab",
+    "hairStyle": "Peinado",
+    "hairStyles": {
+      "long": "Pelo largo",
+      "bob": "Media melena",
+      "bun": "Moño",
+      "curly": "Rizado"
+    },
+    "hairColor": "Color del pelo",
+    "scarf": "Color del pañuelo",
+    "dress": "Color de la ropa",
+    "accessory": "Accesorio",
+    "accessories": {
+      "none": "Ninguno",
+      "daisy": "Margarita",
+      "rose": "Rosa",
+      "bow": "Lazo"
+    },
+    "save": "Guardar",
+    "saved": "Guardado",
+    "plan": "Tu plan",
+    "finish": "Florecerá el",
+    "changePlan": "Cambiar mi plan",
+    "noPlan": "Crear mi plan",
+    "account": {
+      "title": "Guarda tu jardín",
+      "text": "Ahora tu jardín solo vive en este navegador. Crea una cuenta para no perderlo y verlo en el móvil.",
+      "cta": "Crear cuenta"
+    },
+    "soon": "Muy pronto",
+    "settings": {
+      "language": "Idioma",
+      "reciter": "Recitador",
+      "reminders": "Recordatorios"
+    }
   }
 }
