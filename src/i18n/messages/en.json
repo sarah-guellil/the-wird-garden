@@ -80,5 +80,149 @@
   },
   "footer": {
     "source": "Source on GitHub"
+  },
+  "onboarding": {
+    "progress": "Step {current} of {total}",
+    "back": "Back",
+    "next": "Next",
+    "welcome": {
+      "title": "Assalamu alaikum, I'm Aya",
+      "text": "I'll walk with you on your journey with the Quran, step by step. Every ayah you memorize will be a seed in your garden, and I'll help you take care of it. Before we begin, tell me: what's your name?",
+      "nameLabel": "Your name",
+      "namePlaceholder": "Type your name"
+    },
+    "known": {
+      "question": "Nice to meet you, {name}. Have you memorized any surahs yet?",
+      "options": {
+        "yes": "Yes, some",
+        "no": "Not yet"
+      }
+    },
+    "surahs": {
+      "question": "Which ones? Mark them and we'll plant them in your garden.",
+      "shortcutAmma": "Juz' Amma (78–114)",
+      "shortcutTabarak": "Juz' Tabarak (67–77)",
+      "clear": "Clear all",
+      "typeLabel": "Know the numbers? Type them, for example: 1, 18, 78-114",
+      "typeAdd": "Add",
+      "selected": "{n} surahs marked",
+      "none": "Mark at least one surah to continue."
+    },
+    "review": {
+      "question": "Would you like to review the surahs you already know?",
+      "options": {
+        "yes": "Yes, add them to my review",
+        "no": "No, only new ones"
+      },
+      "hint": "Reviewing is watering: it keeps them from wilting."
+    },
+    "goal": {
+      "question": "What would you like to memorize?",
+      "options": {
+        "quran": "The whole Quran",
+        "amma": "Juz' Amma",
+        "juz": "A specific juz'"
+      },
+      "juzLabel": "Which juz'?",
+      "juzOption": "Juz' {n}",
+      "hidden": "I won't suggest what you already know."
+    },
+    "direction": {
+      "question": "Where would you like to start?",
+      "options": {
+        "start": "From Al-Fatiha",
+        "end": "From the end (Juz' Amma)"
+      },
+      "hint": "Many people start from the end, because the surahs are shorter."
+    },
+    "method": {
+      "question": "How do you prefer to memorize?",
+      "options": {
+        "ayah": "By ayahs",
+        "third": "By thirds of a page",
+        "half": "By half page",
+        "page": "By page"
+      },
+      "hint": "A page of the mushaf has 15 lines. A third is 5 lines."
+    },
+    "perDay": {
+      "question": "How much would you like to memorize each day?",
+      "units": {
+        "ayah": "{n} ayahs",
+        "third": "{n} third|{n} thirds",
+        "half": "{n} half page|{n} half pages",
+        "page": "{n} page|{n} pages"
+      },
+      "hints": {
+        "ayah": "Each ayah usually takes 3 to 5 minutes, depending on its length.",
+        "third": "A third usually takes 15 to 25 minutes.",
+        "half": "Half a page usually takes 25 to 40 minutes.",
+        "page": "A page usually takes 45 to 90 minutes."
+      },
+      "review": "Leave some time for review too."
+    },
+    "days": {
+      "question": "How many days a week?",
+      "option": "{n} days",
+      "optionAll": "Every day"
+    },
+    "mode": {
+      "question": "How would you like me to help?",
+      "options": {
+        "guided": "Guide me day by day",
+        "free": "I'd rather go my own way"
+      },
+      "hints": {
+        "guided": "Each day I'll tell you what to memorize and what to review.",
+        "free": "You choose what to memorize. I'll remind you of your reviews."
+      }
+    },
+    "summary": {
+      "title": "Your garden is ready",
+      "varieties": {
+        "quran": "Whole Quran",
+        "amma": "Juz' Amma",
+        "juz": "Juz' {n}"
+      },
+      "methods": {
+        "ayah": "By ayah",
+        "third": "By thirds",
+        "half": "Half page",
+        "page": "By page"
+      },
+      "packet": {
+        "title": "{name}'s Seeds",
+        "variety": "Variety",
+        "instructions": "Sowing",
+        "sowing": "instructions",
+        "method": "Method",
+        "sow": "Sow",
+        "water": "Water",
+        "care": "Care",
+        "perDay": "{amount}/day",
+        "days": "{n} days/wk",
+        "modes": {
+          "guided": "Guided",
+          "free": "Your way"
+        },
+        "bloom": "Blooms ~",
+        "seeds": "For the surah you already know, Yasmin gives you {seeds} seeds.|For the {n} surahs you already know, Yasmin gives you {seeds} seeds.",
+        "flip": "Tap the packet to see the instructions"
+      },
+      "done": "You already know what you chose! Go back and pick another goal.",
+      "enter": "Start your garden",
+      "enterHint": "Tap the garden gate to go in."
+    },
+    "labels": {
+      "method": "Method",
+      "pace": "Pace",
+      "mode": "Mode",
+      "paceValue": "{amount} · {days} days/week"
+    }
+  },
+  "gardenPage": {
+    "title": "Your garden",
+    "text": "Your first lesson will start here. Very soon you'll be able to memorize, review and watch everything bloom.",
+    "back": "Back to my plan"
   }
 }
