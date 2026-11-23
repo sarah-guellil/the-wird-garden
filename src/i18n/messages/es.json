@@ -179,15 +179,36 @@
     },
     "summary": {
       "title": "Tu jardín está listo",
-      "sign": "El jardín de {name}",
-      "seeds": "Por la sura que ya sabes, Yasmin te ha preparado {seeds} semillas: una por cada aleya.|Por las {n} suras que ya sabes, Yasmin te ha preparado {seeds} semillas: una por cada aleya.",
-      "goals": {
-        "quran": "el Corán completo",
+      "varieties": {
+        "quran": "Corán completo",
         "amma": "Juz' Amma",
-        "juz": "el juz' {n}"
+        "juz": "Juz' {n}"
       },
-      "estimate": "A este ritmo, terminarás {goal} el {date}.",
-      "approx": "Es una estimación: el plan se ajustará a tu ritmo real.",
+      "methods": {
+        "ayah": "Por aleyas",
+        "third": "Por tercios",
+        "half": "Media página",
+        "page": "Por página"
+      },
+      "packet": {
+        "title": "Semillas de {name}",
+        "variety": "Variedad",
+        "instructions": "Instrucciones",
+        "sowing": "de siembra",
+        "method": "Método",
+        "sow": "Siembra",
+        "water": "Riego",
+        "care": "Cuidado",
+        "perDay": "{amount}/día",
+        "days": "{n} días/sem",
+        "modes": {
+          "guided": "Guiado",
+          "free": "A tu aire"
+        },
+        "bloom": "Floración aprox.",
+        "seeds": "Por la sura que ya sabes, Yasmin te regala {seeds} semillas.|Por las {n} suras que ya sabes, Yasmin te regala {seeds} semillas.",
+        "flip": "Toca el sobre para ver las instrucciones"
+      },
       "done": "¡Ya te sabes lo que has elegido! Vuelve atrás y elige otro objetivo.",
       "enter": "Empieza tu jardín",
       "enterHint": "Pulsa la valla del jardín para entrar."

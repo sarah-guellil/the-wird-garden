@@ -296,3 +296,19 @@ body {
 .garden-gate:focus-visible .gate-sign-board {
   stroke: var(--rose-deep);
 }
+
+/* ---------- Sobre de semillas: aparece desde abajo al llegar al resumen ---------- */
+@keyframes packet-in {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.packet-in {
+  animation: packet-in 0.7s ease-out both;
+}

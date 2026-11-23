@@ -179,15 +179,36 @@
     },
     "summary": {
       "title": "Your garden is ready",
-      "sign": "{name}'s Garden",
-      "seeds": "For the surah you already know, Yasmin has prepared {seeds} seeds for you: one for each ayah.|For the {n} surahs you already know, Yasmin has prepared {seeds} seeds for you: one for each ayah.",
-      "goals": {
-        "quran": "the whole Quran",
+      "varieties": {
+        "quran": "Whole Quran",
         "amma": "Juz' Amma",
-        "juz": "juz' {n}"
+        "juz": "Juz' {n}"
       },
-      "estimate": "At this pace, you'll finish {goal} around {date}.",
-      "approx": "This is an estimate: the plan will adapt to your real pace.",
+      "methods": {
+        "ayah": "By ayah",
+        "third": "By thirds",
+        "half": "Half page",
+        "page": "By page"
+      },
+      "packet": {
+        "title": "{name}'s Seeds",
+        "variety": "Variety",
+        "instructions": "Sowing",
+        "sowing": "instructions",
+        "method": "Method",
+        "sow": "Sow",
+        "water": "Water",
+        "care": "Care",
+        "perDay": "{amount}/day",
+        "days": "{n} days/wk",
+        "modes": {
+          "guided": "Guided",
+          "free": "Your way"
+        },
+        "bloom": "Blooms ~",
+        "seeds": "For the surah you already know, Yasmin gives you {seeds} seeds.|For the {n} surahs you already know, Yasmin gives you {seeds} seeds.",
+        "flip": "Tap the packet to see the instructions"
+      },
       "done": "You already know what you chose! Go back and pick another goal.",
       "enter": "Start your garden",
       "enterHint": "Tap the garden gate to go in."

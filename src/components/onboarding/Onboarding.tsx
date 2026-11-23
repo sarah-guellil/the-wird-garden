@@ -15,6 +15,7 @@ import {
 } from "@/lib/plan";
 import { countAyahs, JUZ_AMMA, JUZ_TABARAK, range, SURAHS } from "@/lib/surahs";
 import { Typewriter } from "./Typewriter";
+import { SeedPacket } from "./SeedPacket";
 import { Aya } from "@/components/characters/Aya";
 import { AyaFull } from "@/components/characters/AyaFull";
 import { GardenScene } from "@/components/garden/GardenScene";
@@ -389,39 +390,35 @@ export function Onboarding({ t, locale }: { t: T; locale: Locale }) {
 
   function renderSummary() {
     const finish = estimateFinishDate(plan, new Date());
-    const goal = fill(t.summary.goals[plan.goal], { n: plan.juz });
-    const date = finish ? new Intl.DateTimeFormat(locale, { day: "numeric", month: "long", year: "numeric" }).format(finish) : "";
+    // Si ya se sabe todo lo que eligió, no hay sobre: le pedimos que elija otro objetivo
+    if (!finish) return <p className="text-center text-lg leading-relaxed">{t.summary.done}</p>;
+
+    const p = t.summary.packet;
+    const known = plan.knownSurahs.length;
+    // Fecha corta para el sobre: "22 ene 2029"
+    const bloomDate = new Intl.DateTimeFormat(locale, { day: "numeric", month: "short", year: "numeric" })
+      .format(finish)
+      .replace(".", "");
 
     return (
-      <div className="space-y-4 text-center">
-        {plan.knownSurahs.length > 0 && (
-          <p className="text-ink-soft">
-            {plural(t.summary.seeds, plan.knownSurahs.length, { seeds: countAyahs(plan.knownSurahs) })}
-          </p>
-        )}
-
-        <p className="text-lg leading-relaxed">{finish ? fill(t.summary.estimate, { goal, date }) : t.summary.done}</p>
-
-        <dl className="grid gap-3 rounded-2xl bg-surface p-4 sm:grid-cols-3">
-          <div>
-            <dt className="text-sm text-ink-soft">{t.labels.method}</dt>
-            <dd className="font-semibold">{t.method.options[plan.method]}</dd>
-          </div>
-          <div>
-            <dt className="text-sm text-ink-soft">{t.labels.pace}</dt>
-            <dd className="font-semibold">
-              {fill(t.labels.paceValue, { amount: unitLabel(plan.method, plan.perDay), days: plan.days })}
-            </dd>
-          </div>
-          <div>
-            <dt className="text-sm text-ink-soft">{t.labels.mode}</dt>
-            <dd className="font-semibold">{t.mode.options[plan.mode]}</dd>
-          </div>
-        </dl>
-
-        <p className="text-sm text-ink-soft">{t.summary.approx}</p>
-
-        {finish && <p className="font-semibold text-rose-deep">{t.summary.enterHint}</p>}
+      <div className="space-y-3">
+        <SeedPacket
+          title={fill(p.title, { name })}
+          varietyLabel={p.variety}
+          variety={fill(t.summary.varieties[plan.goal], { n: plan.juz })}
+          instructions={[p.instructions, p.sowing]}
+          rows={[
+            { label: p.method, value: t.summary.methods[plan.method] },
+            { label: p.sow, value: fill(p.perDay, { amount: unitLabel(plan.method, plan.perDay) }) },
+            { label: p.water, value: fill(p.days, { n: plan.days }) },
+            { label: p.care, value: p.modes[plan.mode] },
+          ]}
+          bloomLabel={p.bloom}
+          bloomDate={bloomDate}
+          seeds={known > 0 ? plural(p.seeds, known, { seeds: countAyahs(plan.knownSurahs) }) : undefined}
+          flipHint={p.flip}
+        />
+        <p className="text-center font-semibold text-rose-deep">{t.summary.enterHint}</p>
       </div>
     );
   }
@@ -496,7 +493,7 @@ export function Onboarding({ t, locale }: { t: T; locale: Locale }) {
                 </div>
               </div>
 
-              <div className="mt-6">{renderStep()}</div>
+              <div className={step === "summary" ? "mt-4" : "mt-6"}>{renderStep()}</div>
 
               {/* Navegación */}
               <div className={`mt-4 flex items-center ${step === "summary" ? "justify-center" : "justify-between"}`}>
@@ -533,7 +530,6 @@ export function Onboarding({ t, locale }: { t: T; locale: Locale }) {
         <div className={`transition-opacity duration-1000 ${step === "summary" ? "opacity-100" : "opacity-80"}`}>
           <GardenScene
             progress={gardenProgress}
-            sign={step === "summary" ? fill(t.summary.sign, { name }) : undefined}
             gate={showGate ? { label: t.summary.enter, onEnter: enterGarden } : undefined}
           />
         </div>
