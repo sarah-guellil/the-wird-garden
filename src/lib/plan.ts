@@ -7,6 +7,7 @@ export type Method = "ayah" | "third" | "half" | "page";
 export type DaysPerWeek = 3 | 5 | 7;
 export type Mode = "guided" | "free";
 
+
 export type Plan = {
   name: string;
   knownSurahs: number[]; // números de sura que ya sabe
@@ -41,7 +42,7 @@ export const PER_DAY_OPTIONS: Record<Method, number[]> = {
 };
 
 // Páginas que abarca cada objetivo, como intervalo [inicio, fin)
-function goalRange(plan: Plan): [number, number] {
+export function goalRange(plan: Plan): [number, number] {
   if (plan.goal === "quran") return [1, 605];
   if (plan.goal === "amma") return [582, 605];
   const start = plan.juz === 1 ? 1 : 2 + 20 * (plan.juz - 1);

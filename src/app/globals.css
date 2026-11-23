@@ -89,6 +89,7 @@ body {
   outline-offset: 2px;
 }
 
+/* Si el sistema pide "reducir movimiento", las animaciones son instantáneas */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -195,7 +196,8 @@ body {
   animation: garden-sway 3s ease-in-out infinite alternate;
 }
 
-/* La mariposa vuela dentro del jardín: left y top son porcentajes del jardín */
+/* ---------- Mariposa: revolotea sobre el jardín y bate las alas ----------
+   left y top son porcentajes del jardín, así la mariposa nunca sale de él */
 @keyframes butterfly-fly {
   0% {
     left: 6%;
@@ -239,11 +241,28 @@ body {
   }
 }
 
+/* Aleteo: las alas se estrechan y se abren muy rápido */
+@keyframes butterfly-flap {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0.3);
+  }
+}
+
 .butterfly {
   /* Posición de partida: si la animación no corre, se queda posada aquí, dentro del jardín */
   left: 6%;
   top: 55%;
   animation: butterfly-fly 40s ease-in-out infinite;
+}
+
+/* Cada ala se estrecha hacia el cuerpo (su lado derecho, que es donde se une) */
+.butterfly-wing {
+  transform-box: fill-box;
+  transform-origin: right center;
+  animation: butterfly-flap 0.18s ease-in-out infinite alternate;
 }
 
 /* Si el sistema pide "reducir movimiento", la mariposa se queda quieta (pero en el jardín) */

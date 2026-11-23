@@ -220,9 +220,43 @@
       "paceValue": "{amount} · {days} days/week"
     }
   },
-  "gardenPage": {
-    "title": "Your garden",
-    "text": "Your first lesson will start here. Very soon you'll be able to memorize, review and watch everything bloom.",
-    "back": "Back to my plan"
+  "nav": {
+    "label": "Main navigation",
+    "today": "Today",
+    "garden": "My garden",
+    "progress": "Progress",
+    "profile": "Profile"
+  },
+  "comingSoon": "This part of the garden is still growing. You'll see it very soon.",
+  "today": {
+    "greeting": {
+      "morning": "Good morning, {name}",
+      "afternoon": "Good afternoon, {name}",
+      "night": "Good evening, {name}"
+    },
+    "progress": "You've done",
+    "progressSub": "{done} of {total} pages",
+    "finish": "Blooms on",
+    "finishSub": "at your current pace",
+    "finishDone": "Completed!",
+    "streak": "Streak",
+    "streakValue": "{n} day|{n} days",
+    "streakStart": "Start today",
+    "wird": "Today's wird",
+    "wirdDone": "{done} of {total} done",
+    "memorize": "🌱 Memorize",
+    "memorizePage": "{amount} · page {page} · {surah}",
+    "memorizeAyah": "{amount} · {surah}",
+    "memorizeDone": "You already know it all!",
+    "start": "Start",
+    "review": "💧 Review",
+    "reviewMore": "and {n} more",
+    "reviewNothing": "Nothing to water yet. Tomorrow you'll review today's portion.",
+    "later": "Next",
+    "noPlan": {
+      "title": "You don't have a garden yet",
+      "text": "Answer a few questions from Aya and we'll prepare a plan for you.",
+      "cta": "Start my garden"
+    }
   }
 }

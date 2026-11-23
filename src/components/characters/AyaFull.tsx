@@ -3,6 +3,8 @@ import { Daisy, Rose } from "./Character";
 // Aya de cuerpo entero, sujetando el mushaf.
 // Se usa en pantallas grandes, al lado de la conversación.
 // - talkingMs: cuánto rato habla (mueve la boca). Parpadea sola.
+// - face: si es true, solo se ve la cabeza (para usarla como foto de perfil).
+
 
 const HIJAB = "#F6DDE3";
 const HIJAB_INNER = "#E7BFCB";
@@ -17,12 +19,26 @@ const MUSHAF_EDGE = "#3B5238";
 const SKIN = "#F7DFCF";
 const GOLD = "#D9B67E";
 
-export function AyaFull({ height = 420, talkingMs = 0 }: { height?: number; talkingMs?: number }) {
+export function AyaFull({
+  height = 420,
+  talkingMs = 0,
+  face = false,
+}: {
+  height?: number;
+  talkingMs?: number;
+  face?: boolean;
+}) {
   const talking = talkingMs > 0;
   const mouthCycles = Math.ceil(talkingMs / 300);
 
   return (
-    <svg viewBox="0 0 200 330" height={height} width={(height * 200) / 330} aria-hidden="true">
+    // Con face, el viewBox "recorta" el dibujo y solo enseña la cabeza con el hijab
+    <svg
+      viewBox={face ? "46 30 108 108" : "0 0 200 330"}
+      height={height}
+      width={face ? height : (height * 200) / 330}
+      aria-hidden="true"
+    >
       {/* Suelo y brotes */}
       <ellipse cx="100" cy="312" rx="80" ry="12" fill={DRESS} opacity="0.25" />
       <g transform="translate(160 312)">

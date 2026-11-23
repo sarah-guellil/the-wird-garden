@@ -128,7 +128,7 @@ export function Onboarding({ t, locale }: { t: T; locale: Locale }) {
     } catch {
       // Si el navegador no deja guardar (modo privado), seguimos igual
     }
-    router.push(`/${locale}/garden`);
+    router.push(`/${locale}/today`);
   }
 
   // Pasa a la siguiente pregunta tras un momento, para que se vea la opción elegida.
