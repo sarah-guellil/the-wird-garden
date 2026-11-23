@@ -220,9 +220,43 @@
       "paceValue": "{amount} · {days} días/semana"
     }
   },
-    "gardenPage": {
-    "title": "Tu jardín",
-    "text": "Aquí empezará tu primera lección. Muy pronto podrás memorizar, repasar y ver cómo florece todo.",
-    "back": "Volver a mi plan"
+  "nav": {
+    "label": "Navegación principal",
+    "today": "Hoy",
+    "garden": "Mi jardín",
+    "progress": "Progreso",
+    "profile": "Perfil"
+  },
+  "comingSoon": "Esta parte del jardín todavía está creciendo. Muy pronto podrás verla.",
+  "today": {
+    "greeting": {
+      "morning": "Buenos días, {name}",
+      "afternoon": "Buenas tardes, {name}",
+      "night": "Buenas noches, {name}"
+    },
+    "progress": "Llevas",
+    "progressSub": "{done} de {total} páginas",
+    "finish": "Florecerá el",
+    "finishSub": "a tu ritmo actual",
+    "finishDone": "¡Completado!",
+    "streak": "Racha",
+    "streakValue": "{n} día|{n} días",
+    "streakStart": "Empieza hoy",
+    "wird": "Tu wird de hoy",
+    "wirdDone": "{done} de {total} hecho",
+    "memorize": "🌱 Memorizar",
+    "memorizePage": "{amount} · página {page} · {surah}",
+    "memorizeAyah": "{amount} · {surah}",
+    "memorizeDone": "¡Ya te lo sabes todo!",
+    "start": "Empezar",
+    "review": "💧 Repasar",
+    "reviewMore": "y {n} más",
+    "reviewNothing": "Aún no hay nada que regar. Mañana repasarás lo de hoy.",
+    "later": "Después",
+    "noPlan": {
+      "title": "Todavía no tienes jardín",
+      "text": "Responde unas preguntas a Aya y te preparamos un plan a tu medida.",
+      "cta": "Empezar mi jardín"
+    }
   }
 }

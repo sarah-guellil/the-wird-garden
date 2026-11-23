@@ -140,6 +140,9 @@ export function GardenScene({
       {gate && (
         <g
           className="garden-gate"
+          // El jardín tiene pointer-events-none (para que no moleste al hacer clic);
+          // la valla lo reactiva aquí mismo para que sí se pueda pulsar
+          style={{ pointerEvents: "auto", cursor: "pointer" }}
           role="button"
           tabIndex={0}
           aria-label={gate.label}
