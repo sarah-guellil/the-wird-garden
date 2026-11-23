@@ -35,7 +35,7 @@ function PrimaryButton({ href, children }: { href: string; children: React.React
 export default async function Home() {
   const t = await getDictionary();
   const locale = await getLocale();
-  const appHref = `/${locale}/today`;
+  const appHref = `/${locale}/start`;
 
   return (
     <div className="min-h-screen">
@@ -64,7 +64,7 @@ export default async function Home() {
         </nav>
       </header>
 
-      <main>
+      <main className="flex flex-1 flex-col pt-4 sm:pt-10">
         {/* Hero: ocupa la pantalla entera para que el jardín se vea completo */}
         <section className="flex min-h-[calc(100svh-6rem)] flex-col overflow-hidden">
           <div className="mx-auto flex max-w-4xl flex-1 flex-col justify-center px-6 py-6 text-center">

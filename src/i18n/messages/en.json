@@ -86,10 +86,10 @@
     "back": "Back",
     "next": "Next",
     "welcome": {
-      "title": "Assalamu alaikum, I'm Yasmin",
-      "text": "I'll look after your garden with you. I'll ask you a few quick questions to prepare a plan made for you. You can change it anytime.",
-      "nameLabel": "What's your name?",
-      "namePlaceholder": "Your name"
+      "title": "Assalamu alaikum, I'm Aya",
+      "text": "I'll walk with you on your journey with the Quran, step by step. Every ayah you memorize will be a seed in your garden, and I'll help you take care of it. Before we begin, tell me: what's your name?",
+      "nameLabel": "Your name",
+      "namePlaceholder": "Type your name"
     },
     "known": {
       "question": "Nice to meet you, {name}. Have you memorized any surahs yet?",
@@ -124,7 +124,8 @@
         "juz": "A specific juz'"
       },
       "juzLabel": "Which juz'?",
-      "juzOption": "Juz' {n}"
+      "juzOption": "Juz' {n}",
+      "hidden": "I won't suggest what you already know."
     },
     "direction": {
       "question": "Where would you like to start?",
@@ -179,7 +180,7 @@
     "summary": {
       "title": "Your garden is ready",
       "sign": "{name}'s Garden",
-      "plants": "It already has {n} plants: the surahs you know.",
+      "seeds": "For the surah you already know, Yasmin has prepared {seeds} seeds for you: one for each ayah.|For the {n} surahs you already know, Yasmin has prepared {seeds} seeds for you: one for each ayah.",
       "goals": {
         "quran": "the whole Quran",
         "amma": "Juz' Amma",
@@ -188,9 +189,8 @@
       "estimate": "At this pace, you'll finish {goal} around {date}.",
       "approx": "This is an estimate: the plan will adapt to your real pace.",
       "done": "You already know what you chose! Go back and pick another goal.",
-      "save": "Save my plan",
-      "saved": "Plan saved. Very soon you'll be able to start your first lesson.",
-      "home": "Back to home"
+      "enter": "Start your garden",
+      "enterHint": "Tap the garden gate to go in."
     },
     "labels": {
       "method": "Method",
@@ -198,5 +198,10 @@
       "mode": "Mode",
       "paceValue": "{amount} · {days} days/week"
     }
+  },
+  "gardenPage": {
+    "title": "Your garden",
+    "text": "Your first lesson will start here. Very soon you'll be able to memorize, review and watch everything bloom.",
+    "back": "Back to my plan"
   }
 }

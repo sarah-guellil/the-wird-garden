@@ -86,10 +86,10 @@
     "back": "Atrás",
     "next": "Siguiente",
     "welcome": {
-      "title": "Assalamu alaikum, soy Yasmin",
-      "text": "Cuidaré tu jardín contigo. Te haré unas preguntas rápidas para preparar un plan a tu medida. Puedes cambiarlo cuando quieras.",
-      "nameLabel": "¿Cómo te llamas?",
-      "namePlaceholder": "Tu nombre"
+      "title": "Assalamu alaikum, soy Aya",
+      "text": "Voy a acompañarte en tu camino con el Corán, paso a paso. Cada aleya que memorices será una semilla en tu jardín, y yo te ayudaré a cuidarla. Antes de empezar, cuéntame: ¿cómo te llamas?",
+      "nameLabel": "Tu nombre",
+      "namePlaceholder": "Escribe tu nombre"
     },
     "known": {
       "question": "Encantada, {name}. ¿Ya has memorizado alguna sura?",
@@ -124,7 +124,8 @@
         "juz": "Un juz' concreto"
       },
       "juzLabel": "¿Qué juz'?",
-      "juzOption": "Juz' {n}"
+      "juzOption": "Juz' {n}",
+      "hidden": "No te propongo lo que ya te sabes."
     },
     "direction": {
       "question": "¿Por dónde quieres empezar?",
@@ -179,18 +180,17 @@
     "summary": {
       "title": "Tu jardín está listo",
       "sign": "El jardín de {name}",
-      "plants": "Ya tiene {n} plantas: las suras que te sabes.",
+      "seeds": "Por la sura que ya sabes, Yasmin te ha preparado {seeds} semillas: una por cada aleya.|Por las {n} suras que ya sabes, Yasmin te ha preparado {seeds} semillas: una por cada aleya.",
       "goals": {
         "quran": "el Corán completo",
         "amma": "Juz' Amma",
         "juz": "el juz' {n}"
       },
-      "estimate": "A este ritmo, terminarás {goal} hacia {date}.",
+      "estimate": "A este ritmo, terminarás {goal} el {date}.",
       "approx": "Es una estimación: el plan se ajustará a tu ritmo real.",
       "done": "¡Ya te sabes lo que has elegido! Vuelve atrás y elige otro objetivo.",
-      "save": "Guardar mi plan",
-      "saved": "Plan guardado. Muy pronto podrás empezar tu primera lección.",
-      "home": "Volver al inicio"
+      "enter": "Empieza tu jardín",
+      "enterHint": "Pulsa la valla del jardín para entrar."
     },
     "labels": {
       "method": "Método",
@@ -198,5 +198,10 @@
       "mode": "Modo",
       "paceValue": "{amount} · {days} días/semana"
     }
+  },
+    "gardenPage": {
+    "title": "Tu jardín",
+    "text": "Aquí empezará tu primera lección. Muy pronto podrás memorizar, repasar y ver cómo florece todo.",
+    "back": "Volver a mi plan"
   }
 }

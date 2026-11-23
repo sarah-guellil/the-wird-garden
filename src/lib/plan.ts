@@ -59,6 +59,10 @@ export function pagesToMemorize(plan: Plan): number {
   return Math.max(0, b - a - known);
 }
 
+// ¿Ya se sabe entero este objetivo? (por ejemplo, Juz' Amma si marcó las suras 78-114)
+export const isGoalDone = (plan: Plan, goal: Goal, juz = plan.juz) =>
+  pagesToMemorize({ ...plan, goal, juz }) < 0.01;
+
 // Fecha estimada de fin, o null si ya lo sabe todo
 export function estimateFinishDate(plan: Plan, from: Date): Date | null {
   const lines = pagesToMemorize(plan) * LINES_PER_PAGE;
