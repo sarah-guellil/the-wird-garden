@@ -46,7 +46,9 @@ export function AppNav({ t, locale }: { t: Dictionary["nav"]; locale: string }) 
 
   const items = SECTIONS.map((section) => {
     const href = `/${locale}/${section}`;
-    return { section, href, label: t[section], active: pathname.startsWith(href) };
+    // Memorizar (/learn) se abre desde Hoy, así que ahí también marcamos Hoy
+    const active = pathname.startsWith(href) || (section === "today" && pathname.startsWith(`/${locale}/learn`));
+    return { section, href, label: t[section], active };
   });
 
   const icon = (section: Section) => (

@@ -300,5 +300,57 @@
       "reciter": "Recitador",
       "reminders": "Recordatorios"
     }
+  },
+  "learn": {
+    "back": "Hoy",
+    "loading": "Preparando tu wird…",
+    "info": "Página {page} · aleyas {from}–{to}",
+    "ayahOf": "aleya {n} de {total}",
+    "partOf": {
+      "third": "Tercio {n} de {total}",
+      "half": "Mitad {n} de {total}"
+    },
+    "translationNote": "La traducción es para entender lo que memorizas. Para repetir, vuelve al árabe o a la transliteración.",
+    "translationBubble": "Así entiendes lo que dice",
+    "steps": {
+      "read": "Leer",
+      "memory": "De memoria",
+      "memoryShort": "Memoria"
+    },
+    "aya": [
+      "Léela {n} veces mirando",
+      "Ahora {n} veces sin mirar",
+      "Otra vez mirando, {n} veces",
+      "Y {n} veces más de memoria"
+    ],
+    "read": {
+      "title": "Léela mirando el texto",
+      "text": "En voz alta y despacio, fijándote en cada palabra.",
+      "tap": "Toca al leer"
+    },
+    "memory": {
+      "title": "Recítala de memoria",
+      "text": "El texto está oculto. Si te atascas, echa un vistazo.",
+      "tap": "Toca al recitar",
+      "peek": "Echar un vistazo",
+      "hide": "Ocultar otra vez"
+    },
+    "done": {
+      "title": "¡Trozo terminado!",
+      "text": "Has pasado el 6446 en todas las aleyas.",
+      "bubble": "¡Ma sha Allah, lo has terminado!"
+    },
+    "credits": "Texto y traducción: Quran Foundation (Quran.com)",
+    "translationBy": "Traducción de {name}",
+    "error": {
+      "title": "No hemos podido cargar el Corán",
+      "text": "Revisa tu conexión a internet. Si estás programando, comprueba las claves de Quran Foundation en .env.local."
+    },
+    "view": "Cómo ver el texto",
+    "views": {
+      "arabic": "Árabe",
+      "latin": "Transliteración",
+      "translation": "Traducción"
+    }
   }
 }
