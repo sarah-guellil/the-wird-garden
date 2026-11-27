@@ -3,393 +3,425 @@
 import { useState } from "react";
 import type { Dictionary } from "@/i18n/dictionaries";
 import type { Ayah } from "@/lib/quran";
+import { ayahWords, buildSession, splitAyah } from "@/lib/session";
 import { AyaFull } from "@/components/characters/AyaFull";
 import { AyahMarker } from "./AyahMarker";
 
-// Pantalla de memorizar con el método 6446: cada aleya se lee 6 veces mirando,
-// 4 de memoria, 4 mirando y 6 de memoria. Al terminar, pasa sola a la siguiente.
-// Pendiente: audio (fase 2), enlazar aleyas y trocear las largas (3), guardar progreso (4), tutorial (5).
+// Pantalla de memorizar, aleya por aleya. La interfaz es fija: cabecera arriba,
+// el recuadro con la aleya en el centro y el "mando" abajo. Lo único que cambia
+// es lo que hay dentro del recuadro.
+// Pendiente: audio (fase 2), guardar progreso y celebración (4).
 
 type Props = {
   t: Dictionary["learn"];
-  info: string; // "Página 582 · aleyas 1–11"
-  surah: string; // "An-Naba"
-  part: { label: string; n: number; total: number } | null; // "Tercio 1 de 3" (null si es la página entera)
+  info: string; // "Página 582 · aleyas 1–9"
+  title: string; // "An-Naba" o "An-Nisa 176 · Al-Ma'idah 1–2"
+  part: { label: string; n: number; total: number } | null; // "Tercio 1 de 3"
   ayahs: Ayah[];
   translator: string | null;
 };
 
 type View = "arabic" | "latin" | "translation";
 
-// Los 4 pasos del 6446. "read" = mirando el texto, "memory" = de memoria (texto oculto)
-const STEPS = [
-  { kind: "read", count: 6 },
-  { kind: "memory", count: 4 },
-  { kind: "read", count: 4 },
-  { kind: "memory", count: 6 },
-] as const;
-
 // Sustituye {clave} por su valor
 const fill = (text: string, vars: Record<string, string | number>) =>
   text.replace(/\{(\w+)\}/g, (_, key) => String(vars[key] ?? ""));
 
-const Icon = ({ name }: { name: "eye" | "heart" }) => (
+// El resaltado tipo Stabilo: rosa, con las esquinas un poco irregulares, como hecho a mano
+const STABILO =
+  "rounded-[12px_5px_14px_6px/7px_14px_6px_12px] bg-[#f5c3d2] px-2 [box-decoration-break:clone] [-webkit-box-decoration-break:clone]";
+
+// Tamaño del texto según lo larga que sea la aleya: las cortas, enormes; las largas, más pequeñas.
+// Se limita también por el alto de la pantalla (svh) para que siempre quepa.
+function arabicSize(words: number) {
+  if (words <= 6) return "text-[clamp(2.2rem,min(6vw,9svh),4.2rem)]";
+  if (words <= 14) return "text-[clamp(1.9rem,min(4.2vw,6.5svh),3.2rem)]";
+  if (words <= 30) return "text-[clamp(1.6rem,min(3vw,5svh),2.5rem)]";
+  return "text-[clamp(1.4rem,min(2.5vw,4.2svh),2.1rem)]";
+}
+
+const EyeIcon = () => (
   <svg
     viewBox="0 0 24 24"
-    width="18"
-    height="18"
+    width="16"
+    height="16"
     fill="none"
     stroke="currentColor"
     strokeWidth="1.8"
     strokeLinecap="round"
     strokeLinejoin="round"
-    className="shrink-0"
     aria-hidden="true"
   >
-    {name === "eye" ? (
-      <>
-        <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z" />
-        <circle cx="12" cy="12" r="3" />
-      </>
-    ) : (
-      <path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10Z" />
-    )}
+    <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z" />
+    <circle cx="12" cy="12" r="3" />
   </svg>
 );
 
-// El texto de una aleya. Si es la actual, va pintada de rosa como con un Stabilo
-// (los bordes un poco irregulares lo hacen parecer hecho a mano). Si toca recitar de memoria,
-// el texto se emborrona, pero el rosa sigue ahí para que sepas por dónde vas.
-function AyahText({
-  active,
-  hidden,
-  onClick,
-  text,
-  number,
-}: {
-  active: boolean;
-  hidden: boolean;
-  onClick: () => void;
-  text: string;
-  number: number;
-}) {
-  // La última palabra va pegada a la roseta (whitespace-nowrap), para que el número
-  // nunca se quede solo al principio de la línea siguiente
-  const words = text.split(" ");
-  const last = words.pop();
-  const blur = hidden ? "blur-[10px] select-none" : undefined;
-
-  // Es un <span> (no un <button>) para que el texto fluya palabra a palabra entre líneas
-  // como texto normal. role="button" y tabIndex hacen que se pueda usar con el teclado.
-  return (
-    <span
-      role="button"
-      tabIndex={0}
-      onClick={onClick}
-      onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && onClick()}
-      className={`cursor-pointer rounded-md transition-colors [box-decoration-break:clone] [-webkit-box-decoration-break:clone] ${
-        active
-          ? "rounded-[10px_4px_12px_5px/6px_12px_5px_10px] bg-[#f5c3d2] px-2 text-ink"
-          : "text-ink/85 hover:text-ink"
-      }`}
-    >
-      {words.length > 0 && <span className={blur}>{words.join(" ")} </span>}
-      <span className="whitespace-nowrap">
-        <span className={blur}>{last}</span>
-        <AyahMarker number={number} />
-      </span>
-    </span>
-  );
-}
-
-export function Memorize({ t, info, surah, part, ayahs, translator }: Props) {
-  const [current, setCurrent] = useState(0); // aleya que se está memorizando
-  const [step, setStep] = useState(0); // paso del 6446 (0 a 3)
-  const [reps, setReps] = useState(0); // repeticiones hechas en este paso
-  const [peek, setPeek] = useState(false); // "echar un vistazo" en los pasos de memoria
+export function Memorize({ t, info, title, part, ayahs, translator }: Props) {
+  // La sesión: la lista de unidades (aleyas, trozos, aleya entera, enlazar)
+  const [units] = useState(() => buildSession(ayahs));
+  const [unitIndex, setUnitIndex] = useState(0);
+  const [stepIndex, setStepIndex] = useState(0);
+  const [reps, setReps] = useState(0);
+  const [peek, setPeek] = useState(false); // "echar un vistazo"
   const [finished, setFinished] = useState(false);
   const [view, setView] = useState<View>("arabic");
 
-  const { kind, count } = STEPS[step];
-  const hide =
-    kind === "memory" && !peek && !finished && view !== "translation";
+  const unit = units[unitIndex];
+  const step = unit.steps[stepIndex];
+  const translating = view === "translation";
+  const hide = step.kind === "memory" && !peek && !finished && !translating;
+  const current = unit.type === "link" ? ayahs.length - 1 : unit.ayahIndex;
 
-  // Cada toque del botón grande es una repetición. Al completar un paso, pasa al siguiente;
-  // al completar los 4, pasa a la siguiente aleya; y al acabar la última, se termina el trozo.
+  // Cada toque es una repetición. Al completar un paso pasa al siguiente,
+  // al completar la unidad pasa a la siguiente, y al acabar todas se termina.
   function tap() {
     setPeek(false);
-    if (reps + 1 < count) return setReps(reps + 1);
+    if (reps + 1 < step.count) return setReps(reps + 1);
     setReps(0);
-    if (step < STEPS.length - 1) return setStep(step + 1);
-    setStep(0);
-    if (current < ayahs.length - 1) return setCurrent(current + 1);
+    if (stepIndex < unit.steps.length - 1) return setStepIndex(stepIndex + 1);
+    setStepIndex(0);
+    if (unitIndex < units.length - 1) return setUnitIndex(unitIndex + 1);
     setFinished(true);
   }
 
-  // Tocar otra aleya: empieza su 6446 desde el principio
-  function choose(index: number) {
-    setCurrent(index);
-    setStep(0);
+  // Saltar a otra aleya (con los circulitos): empieza por su primera unidad
+  function jump(ayahIndex: number) {
+    setUnitIndex(
+      units.findIndex((u) => u.type !== "link" && u.ayahIndex === ayahIndex),
+    );
+    setStepIndex(0);
     setReps(0);
     setPeek(false);
     setFinished(false);
   }
 
-  // Lo que dice Aya y el título junto al contador, según el paso
-  const bubble = finished ? t.done.bubble : fill(t.aya[step], { n: count });
-  const title = finished
-    ? t.done.title
-    : kind === "read"
-      ? t.read.title
-      : t.memory.title;
-  const hint = finished
-    ? t.done.text
-    : kind === "read"
-      ? t.read.text
-      : t.memory.text;
+  // Lo que dice Aya, según la unidad y el paso
+  const bubble = finished
+    ? t.done.bubble
+    : translating
+      ? t.translationBubble
+      : unit.type === "link"
+        ? t.link.bubble
+        : unit.type === "join"
+          ? t.join.bubble
+          : fill(t.aya[stepIndex], { n: step.count });
 
-  // Con la traducción se entiende el significado, pero el Corán se memoriza en árabe:
-  // en esa vista no hay contador ni texto oculto, solo una nota para volver.
-  const translating = view === "translation";
+  // Texto de una aleya en la vista elegida
+  const textOf = (a: Ayah) =>
+    view === "arabic"
+      ? ayahWords(a).join(" ")
+      : view === "latin"
+        ? a.transliteration
+        : a.translation;
 
-  // El botón grande y lo que toca hacer. Se pinta en un sitio u otro según la pantalla.
-  const counter = translating ? (
-    <p className="max-w-xs rounded-2xl bg-surface px-4 py-3 text-center text-sm text-ink-soft shadow-sm">
-      {t.translationNote}
-    </p>
-  ) : (
-    <div className="flex flex-col items-center gap-3 text-center">
-      <button
-        type="button"
-        onClick={tap}
-        disabled={finished}
-        className="flex h-28 w-28 shrink-0 flex-col items-center justify-center rounded-full bg-rose-deep text-surface shadow-[0_10px_22px_rgba(173,92,118,.3)] transition-transform active:scale-95 disabled:bg-sage lg:h-[clamp(6.5rem,15svh,8rem)] lg:w-[clamp(6.5rem,15svh,8rem)]"
+  // Principio o final de una aleya, para enseñar la anterior y la siguiente en pequeño
+  const preview = (a: Ayah, from: "start" | "end") => {
+    const words = textOf(a).split(" ");
+    if (words.length <= 6) return textOf(a);
+    return from === "end"
+      ? `… ${words.slice(-6).join(" ")}`
+      : `${words.slice(0, 6).join(" ")} …`;
+  };
+
+  const blur = hide ? "blur-[10px] select-none" : "";
+  const isArabic = view === "arabic";
+  const dir = isArabic ? "rtl" : "ltr";
+
+  // ---------- Lo que va dentro del recuadro ----------
+
+  function stage() {
+    // Enlazar: todo el trozo de hoy seguido
+    if (unit.type === "link" && !finished) {
+      return (
+        <p
+          dir={dir}
+          className={`leading-[2.1] ${blur} ${
+            isArabic
+              ? "text-justify font-quran text-[clamp(1.4rem,min(2.6vw,4.4svh),2.2rem)] [text-align-last:center]"
+              : "text-center text-[clamp(1rem,1.6vw,1.25rem)]"
+          }`}
+        >
+          {ayahs.map((a) => (
+            <span key={a.key}>
+              {textOf(a)}
+              <AyahMarker number={a.number} />{" "}
+            </span>
+          ))}
+        </p>
+      );
+    }
+
+    const ayah = ayahs[current];
+    const words = ayahWords(ayah);
+    const size = isArabic
+      ? `font-quran ${arabicSize(words.length)}`
+      : view === "latin"
+        ? "text-[clamp(1.2rem,2.4vw,1.9rem)] italic"
+        : "text-[clamp(1.1rem,2vw,1.6rem)]";
+
+    // La aleya actual. Si es larga y estamos con un trozo (solo en árabe), se ven los trozos:
+    // los hechos en color normal, el actual con Stabilo y los que faltan clarito.
+    let body: React.ReactNode;
+    if (isArabic && unit.type === "piece") {
+      body = splitAyah(words).map((piece, i) => (
+        <span key={i}>
+          <span
+            className={
+              i === unit.piece
+                ? `${STABILO} ${hide ? "" : "text-ink"}`
+                : i > unit.piece
+                  ? "text-ink/35"
+                  : "text-ink"
+            }
+          >
+            <span className={i === unit.piece ? blur : ""}>
+              {piece.join(" ")}
+            </span>
+          </span>{" "}
+        </span>
+      ));
+    } else {
+      body = (
+        <span className={finished ? "" : STABILO}>
+          <span className={blur}>{textOf(ayah)}</span>
+        </span>
+      );
+    }
+
+    return (
+      <div
+        dir={dir}
+        className="flex w-full flex-col items-center gap-3 text-center"
       >
-        {finished ? (
-          <span className="font-display text-4xl">✓</span>
-        ) : (
-          <>
-            <span className="font-display text-3xl leading-none sm:text-4xl">
-              {reps} / {count}
-            </span>
-            <span className="mt-1 text-xs">
-              {kind === "read" ? t.read.tap : t.memory.tap}
-            </span>
-          </>
+        {current > 0 && !finished && (
+          <p
+            className={`text-ink/35 ${isArabic ? "font-quran text-xl sm:text-2xl" : "text-sm"}`}
+          >
+            {preview(ayahs[current - 1], "end")}
+          </p>
         )}
-      </button>
-      <div>
-        <p className="text-lg font-semibold">{title}</p>
-        <p className="max-w-xs text-sm text-ink-soft">{hint}</p>
+        <p
+          className={`leading-[2] ${size} ${unit.type === "piece" ? "text-justify [text-align-last:center]" : ""}`}
+        >
+          {body}
+          <AyahMarker number={ayah.number} />
+        </p>
+        {current < ayahs.length - 1 && !finished && (
+          <p
+            className={`text-ink/35 ${isArabic ? "font-quran text-xl sm:text-2xl" : "text-sm"}`}
+          >
+            {preview(ayahs[current + 1], "start")}
+          </p>
+        )}
       </div>
-    </div>
-  );
+    );
+  }
+
+  // ---------- Pantalla ----------
 
   return (
-    // Ocupa el alto que deja el menú; si la pantalla es bajita, se puede hacer scroll
-    <div className="flex flex-1 overflow-y-auto">
-      <div className="m-auto grid w-full max-w-6xl items-center gap-6 px-4 py-3 sm:px-6 lg:gap-10 lg:grid-cols-[1fr_280px]">
+    <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-3 px-4 pb-4 sm:px-6 lg:min-h-0">
+      {/* Cabecera: dónde estás y, a la derecha, Aya con su mensaje */}
+      <div className="flex items-center justify-between gap-3">
         <div className="min-w-0">
-          {/* Cabecera: la sura en grande a la izquierda; a la derecha, en qué tercio y aleya vas */}
-          <div className="flex items-end justify-between gap-3">
-            <div className="flex items-center gap-3">
-              <span className="overflow-hidden rounded-full bg-[#e8efe6] lg:hidden">
-                <AyaFull face height={46} />
-              </span>
-              <div>
-                <p className="text-xs font-semibold whitespace-nowrap text-ink-soft sm:text-sm">
-                  {info}
-                </p>
-                <h1 className="font-display text-3xl leading-tight sm:text-4xl">
-                  {surah}
-                </h1>
-              </div>
-            </div>
-            <div className="text-right">
-              {part && (
-                <div className="flex justify-end gap-1">
-                  {Array.from({ length: part.total }, (_, i) => (
-                    <span
-                      key={i}
-                      className={`h-2 w-6 rounded-full sm:w-10 ${i + 1 < part.n ? "bg-sage" : i + 1 === part.n ? "bg-rose" : "bg-border"}`}
-                    />
-                  ))}
-                </div>
-              )}
-              {/* En el móvil, "Tercio 1 de 3" y "aleya 1 de 6" van en dos líneas para que quepa */}
-              <p className="mt-1.5 text-xs font-semibold whitespace-nowrap text-ink-soft sm:text-sm">
-                {part && (
-                  <span className="block sm:inline">
-                    {part.label}
-                    <span className="hidden sm:inline"> · </span>
-                  </span>
-                )}
-                {fill(t.ayahOf, { n: current + 1, total: ayahs.length })}
-              </p>
-            </div>
-          </div>
+          <p className="text-xs font-semibold text-ink-soft sm:text-sm">
+            {info}
+          </p>
+          <h1 className="truncate font-display text-2xl leading-tight sm:text-3xl">
+            {title}
+          </h1>
+        </div>
+        <div className="flex items-center gap-2.5">
+          <p className="hidden rounded-2xl rounded-tr-sm bg-surface px-4 py-2 font-display text-lg whitespace-nowrap shadow-sm sm:block">
+            {bubble}
+          </p>
+          <span className="shrink-0 overflow-hidden rounded-full bg-[#e8efe6]">
+            <AyaFull face height={48} />
+          </span>
+        </div>
+      </div>
+      {/* En el móvil el mensaje de Aya va en su propia línea */}
+      <p className="-mt-1 font-display text-base text-ink-soft sm:hidden">
+        {bubble}
+      </p>
 
-          {/* Los 4 pasos del 6446: hechos en verde, el actual en rosa con sus repeticiones */}
-          <div
-            className={`mt-4 grid grid-cols-4 gap-1.5 transition-opacity sm:gap-2.5 ${translating ? "opacity-40" : ""}`}
-          >
-            {STEPS.map((s, i) => {
-              const done = finished || i < step;
-              const now = !finished && i === step;
-              return (
-                <div
-                  key={i}
-                  className={`rounded-2xl border-[1.5px] px-2 py-2 sm:px-3.5 sm:py-2.5 ${
-                    done
-                      ? "border-[#cfe0cb] bg-[#eef3ec]"
-                      : now
-                        ? "border-rose-deep bg-[#fdf3f6]"
-                        : "border-border bg-surface"
-                  }`}
-                >
-                  <p className="flex items-center gap-1.5 text-xs font-semibold whitespace-nowrap sm:text-[15px]">
-                    <span className="hidden text-rose-deep sm:inline">
-                      <Icon name={s.kind === "read" ? "eye" : "heart"} />
-                    </span>
-                    <span className="sm:hidden">
-                      {s.kind === "read" ? t.steps.read : t.steps.memoryShort}
-                    </span>
-                    <span className="hidden sm:inline">
-                      {s.kind === "read" ? t.steps.read : t.steps.memory} ·
-                    </span>
-                    {s.count}
-                    {done && " ✓"}
-                  </p>
-                  <div
-                    className={`mt-1.5 gap-1 ${now ? "flex" : "hidden sm:flex"}`}
-                  >
-                    {Array.from({ length: s.count }, (_, k) => (
-                      <span
-                        key={k}
-                        className={`h-1.5 w-1.5 rounded-full sm:h-2.5 sm:w-2.5 ${
-                          done
-                            ? "bg-sage"
-                            : now && k < reps
-                              ? "bg-rose-deep"
-                              : "bg-border"
-                        }`}
-                      />
-                    ))}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          {/* El trozo de hoy, como en el mushaf */}
-          <div className="mt-4 rounded-3xl border-[1.5px] border-[#ECDCC4] bg-[#FFFDF8] px-3 py-[clamp(0.75rem,2svh,1.25rem)] shadow-[inset_0_0_0_7px_#FBF5EA] sm:px-8">
-            {view === "arabic" ? (
-              // El árabe va seguido, de lado a lado del recuadro (no línea a línea como el mushaf),
-              // para aprovechar el ancho. "justify" reparte las palabras para que cada línea
-              // llegue a los dos bordes; la última línea va centrada.
-              <p
-                dir="rtl"
-                lang="ar"
-                className="text-justify font-quran text-[clamp(1.6rem,min(3.3vw,5svh),2.6rem)] leading-[2.1] [text-align-last:center]"
-              >
-                {ayahs.map((a, i) => (
-                  <span key={a.key}>
-                    <AyahText
-                      active={i === current}
-                      hidden={hide && i === current}
-                      onClick={() => choose(i)}
-                      text={a.words.map((w) => w.text).join(" ")}
-                      number={a.number}
-                    />{" "}
-                  </span>
-                ))}
-              </p>
-            ) : (
-              // Transliteración o traducción: el mismo formato, texto seguido y centrado
-              <p
-                className={`text-center leading-[2.1] ${
-                  view === "latin"
-                    ? "text-[clamp(1.15rem,2vw,1.5rem)] italic"
-                    : "text-[clamp(1.05rem,1.8vw,1.3rem)]"
+      {/* El recuadro: siempre del mismo tamaño, ocupa todo lo que queda */}
+      <div className="relative flex min-h-[45svh] flex-1 flex-col rounded-3xl border-[1.5px] border-[#ECDCC4] bg-[#FFFDF8] shadow-[inset_0_0_0_7px_#FBF5EA] lg:min-h-0">
+        {/* Circulitos con las aleyas de hoy: hechas en verde, la actual en rosa */}
+        <div
+          dir="rtl"
+          className="flex flex-wrap justify-center gap-1.5 px-4 pt-4"
+        >
+          {ayahs.map((a, i) => {
+            const done = finished || unit.type === "link" || i < current;
+            return (
+              <button
+                key={a.key}
+                type="button"
+                onClick={() => jump(i)}
+                aria-label={fill(t.goTo, { n: a.number })}
+                className={`flex h-7 min-w-7 items-center justify-center rounded-full border-[1.5px] px-1 text-[11px] font-semibold ${
+                  !done && i === current
+                    ? "border-rose-deep bg-rose-deep text-surface"
+                    : done
+                      ? "border-[#cfe0cb] bg-[#eef3ec] text-[#5f7a5b]"
+                      : "border-border bg-surface text-ink-soft"
                 }`}
               >
-                {ayahs.map((a, i) => (
-                  <span key={a.key}>
-                    <AyahText
-                      active={i === current}
-                      hidden={hide && i === current}
-                      onClick={() => choose(i)}
-                      text={
-                        view === "latin" ? a.transliteration : a.translation
-                      }
-                      number={a.number}
-                    />{" "}
-                  </span>
+                {a.number}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* El texto, centrado. Si algo no cupiera, se puede hacer scroll solo aquí dentro. */}
+        <div className="flex flex-1 items-center overflow-y-auto px-4 py-4 sm:px-12">
+          <div className="m-auto w-full">{stage()}</div>
+        </div>
+
+        {/* Debajo del texto: trozo actual, echar un vistazo y créditos */}
+        <div className="flex flex-col items-center gap-1 px-4 pb-3">
+          {unit.type === "piece" && !finished && (
+            <div className="flex items-center gap-2">
+              <div className="flex gap-1">
+                {Array.from({ length: unit.pieces }, (_, i) => (
+                  <span
+                    key={i}
+                    className={`h-1.5 w-8 rounded-full ${i < unit.piece ? "bg-sage" : i === unit.piece ? "bg-rose" : "bg-border"}`}
+                  />
                 ))}
-              </p>
-            )}
-            {kind === "memory" && !finished && !translating && (
-              <p className="text-center">
-                <button
-                  type="button"
-                  onClick={() => setPeek(!peek)}
-                  className="mt-1 inline-flex items-center gap-1.5 text-sm font-semibold text-rose-deep"
-                >
-                  <Icon name="eye" />
-                  {peek ? t.memory.hide : t.memory.peek}
-                </button>
-              </p>
-            )}
-          </div>
-
-          {/* Debajo del texto: el contador (solo móvil; en ordenador va junto a Aya) y cómo ver el texto */}
-          <div className="mt-3 flex flex-col items-center gap-4">
-            <div className="lg:hidden">{counter}</div>
-            <div
-              className="inline-flex rounded-full bg-rose-soft/60 p-1"
-              role="radiogroup"
-              aria-label={t.view}
-            >
-              {(["arabic", "latin", "translation"] as const).map((value) => (
-                <button
-                  key={value}
-                  type="button"
-                  role="radio"
-                  aria-checked={view === value}
-                  onClick={() => setView(value)}
-                  className={`rounded-full px-3 py-1.5 text-xs font-semibold sm:px-4 sm:text-sm ${
-                    view === value
-                      ? "bg-surface text-rose-deep shadow-sm"
-                      : "text-ink-soft"
-                  }`}
-                >
-                  {t.views[value]}
-                </button>
-              ))}
+              </div>
+              <span className="text-xs font-semibold text-ink-soft">
+                {fill(t.pieceOf, { n: unit.piece + 1, total: unit.pieces })}
+              </span>
             </div>
-          </div>
-
-          {/* Créditos que piden las condiciones de Quran Foundation */}
-          <p className="mt-3 text-center text-xs text-ink-soft">
+          )}
+          {step.kind === "memory" && !finished && !translating && (
+            <button
+              type="button"
+              onClick={() => setPeek(!peek)}
+              className="inline-flex items-center gap-1.5 text-sm font-semibold text-rose-deep"
+            >
+              <EyeIcon />
+              {peek ? t.memory.hide : t.memory.peek}
+            </button>
+          )}
+          <p className="text-[11px] text-ink-soft">
             {t.credits}
             {translator && ` · ${fill(t.translationBy, { name: translator })}`}
           </p>
         </div>
+      </div>
 
-        {/* Ordenador: Aya con lo que toca en cada paso y, debajo, el contador.
-            Aya se encoge si la pantalla es bajita, para que todo quepa sin hacer scroll. */}
-        <div className="hidden flex-col items-center gap-3 lg:flex">
-          <p className="relative rounded-2xl bg-surface px-5 py-2.5 font-display text-xl whitespace-nowrap shadow-sm">
-            {translating ? t.translationBubble : bubble}
-            <span
-              className="absolute -bottom-1.5 left-1/2 h-3 w-3 -translate-x-1/2 rotate-45 bg-surface"
-              aria-hidden="true"
-            />
-          </p>
-          <div className="h-[clamp(11rem,30svh,20rem)] [&>svg]:h-full [&>svg]:w-auto">
-            <AyaFull height={320} />
+      {/* El mando: pasos a la izquierda, botón en el centro, dónde vas y vista a la derecha.
+          Siempre en el mismo sitio, cambie lo que cambie. */}
+      <div className="grid shrink-0 grid-cols-1 items-center gap-3 sm:grid-cols-[1fr_auto_1fr] sm:gap-5">
+        <div className="order-2 flex justify-center gap-1.5 sm:order-none sm:justify-start">
+          {unit.steps.map((s, i) => {
+            const done = finished || i < stepIndex;
+            const now = !finished && i === stepIndex;
+            const label =
+              unit.type === "link"
+                ? t.steps.link
+                : unit.type === "join"
+                  ? t.steps.join
+                  : t.steps[s.kind];
+            return (
+              <div
+                key={i}
+                className={`rounded-xl border-[1.5px] px-2.5 py-1.5 text-xs font-semibold whitespace-nowrap ${
+                  translating ? "opacity-40" : ""
+                } ${done ? "border-[#cfe0cb] bg-[#eef3ec]" : now ? "border-rose-deep bg-[#fdf3f6]" : "border-border bg-surface"}`}
+              >
+                {label} {s.count}
+                {done && " ✓"}
+                {now && (
+                  <span className="mt-1 flex gap-0.5">
+                    {Array.from({ length: s.count }, (_, k) => (
+                      <span
+                        key={k}
+                        className={`h-1.5 w-1.5 rounded-full ${k < reps ? "bg-rose-deep" : "bg-border"}`}
+                      />
+                    ))}
+                  </span>
+                )}
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Centro: el botón grande. En la vista Traducción, una nota en el mismo sitio. */}
+        <div className="order-1 flex justify-center sm:order-none">
+          {translating ? (
+            <p className="flex h-24 w-56 items-center rounded-2xl bg-surface px-4 text-center text-xs text-ink-soft shadow-sm">
+              {t.translationNote}
+            </p>
+          ) : (
+            <button
+              type="button"
+              onClick={tap}
+              disabled={finished}
+              className="flex h-24 w-24 flex-col items-center justify-center rounded-full bg-rose-deep text-surface shadow-[0_10px_22px_rgba(173,92,118,.3)] transition-transform active:scale-95 disabled:bg-sage"
+            >
+              {finished ? (
+                <span className="font-display text-4xl">✓</span>
+              ) : (
+                <>
+                  <span className="font-display text-3xl leading-none">
+                    {reps} / {step.count}
+                  </span>
+                  <span className="mt-1 text-[11px]">
+                    {step.kind === "read" ? t.read.tap : t.memory.tap}
+                  </span>
+                </>
+              )}
+            </button>
+          )}
+        </div>
+
+        <div className="order-3 flex flex-col items-center gap-2 sm:order-none sm:items-end">
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-semibold text-ink-soft">
+              {finished
+                ? t.done.title
+                : unit.type === "link"
+                  ? `${part ? `${part.label} · ` : ""}${t.steps.link}`
+                  : `${part ? `${part.label} · ` : ""}${fill(t.ayahOf, { n: current + 1, total: ayahs.length })}`}
+            </span>
+            {part && (
+              <div className="flex gap-1">
+                {Array.from({ length: part.total }, (_, i) => (
+                  <span
+                    key={i}
+                    className={`h-1.5 w-6 rounded-full ${i + 1 < part.n ? "bg-sage" : i + 1 === part.n ? "bg-rose" : "bg-border"}`}
+                  />
+                ))}
+              </div>
+            )}
           </div>
-          {counter}
+          <div
+            className="inline-flex rounded-full bg-rose-soft/60 p-1"
+            role="radiogroup"
+            aria-label={t.view}
+          >
+            {(["arabic", "latin", "translation"] as const).map((value) => (
+              <button
+                key={value}
+                type="button"
+                role="radio"
+                aria-checked={view === value}
+                onClick={() => setView(value)}
+                className={`rounded-full px-3 py-1 text-xs font-semibold sm:text-sm ${
+                  view === value
+                    ? "bg-surface text-rose-deep shadow-sm"
+                    : "text-ink-soft"
+                }`}
+              >
+                {t.views[value]}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
     </div>

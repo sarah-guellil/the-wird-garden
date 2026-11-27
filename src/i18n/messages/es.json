@@ -301,21 +301,23 @@
       "reminders": "Recordatorios"
     }
   },
-  "learn": {
+    "learn": {
     "back": "Hoy",
     "loading": "Preparando tu wird…",
-    "info": "Página {page} · aleyas {from}–{to}",
+    "info": "Página {page} · aleyas {ayahs}",
+    "pageOnly": "Página {page}",
     "ayahOf": "aleya {n} de {total}",
+    "pieceOf": "trozo {n} de {total}",
+    "goTo": "Ir a la aleya {n}",
     "partOf": {
       "third": "Tercio {n} de {total}",
       "half": "Mitad {n} de {total}"
     },
-    "translationNote": "La traducción es para entender lo que memorizas. Para repetir, vuelve al árabe o a la transliteración.",
-    "translationBubble": "Así entiendes lo que dice",
     "steps": {
       "read": "Leer",
-      "memory": "De memoria",
-      "memoryShort": "Memoria"
+      "memory": "Memoria",
+      "join": "Aleya entera",
+      "link": "Enlazar"
     },
     "aya": [
       "Léela {n} veces mirando",
@@ -323,25 +325,28 @@
       "Otra vez mirando, {n} veces",
       "Y {n} veces más de memoria"
     ],
+    "join": {
+      "bubble": "Ahora la aleya entera, de memoria"
+    },
+    "link": {
+      "bubble": "Ahora todo seguido, de memoria"
+    },
     "read": {
-      "title": "Léela mirando el texto",
-      "text": "En voz alta y despacio, fijándote en cada palabra.",
       "tap": "Toca al leer"
     },
     "memory": {
-      "title": "Recítala de memoria",
-      "text": "El texto está oculto. Si te atascas, echa un vistazo.",
       "tap": "Toca al recitar",
       "peek": "Echar un vistazo",
       "hide": "Ocultar otra vez"
     },
     "done": {
-      "title": "¡Trozo terminado!",
-      "text": "Has pasado el 6446 en todas las aleyas.",
+      "title": "¡Terminado!",
       "bubble": "¡Ma sha Allah, lo has terminado!"
     },
     "credits": "Texto y traducción: Quran Foundation (Quran.com)",
     "translationBy": "Traducción de {name}",
+    "translationNote": "La traducción es para entender lo que memorizas. Para repetir, vuelve al árabe o a la transliteración.",
+    "translationBubble": "Así entiendes lo que dice",
     "error": {
       "title": "No hemos podido cargar el Corán",
       "text": "Revisa tu conexión a internet. Si estás programando, comprueba las claves de Quran Foundation en .env.local."
