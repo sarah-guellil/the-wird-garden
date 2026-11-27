@@ -191,7 +191,7 @@ export function Today({ t, units, varieties, locale }: Props) {
               </div>
               {page !== null && (
                 <Link
-                  href={`/${locale}/learn`}
+                  href={`/${locale}/learn?page=${page}&method=${plan.method}&part=1&perDay=${plan.perDay}`}
                   className="w-full rounded-2xl bg-rose-deep px-6 py-2.5 text-center font-semibold text-surface sm:w-auto"
                 >
                   {t.start}

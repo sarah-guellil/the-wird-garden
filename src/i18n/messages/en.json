@@ -300,5 +300,62 @@
       "reciter": "Reciter",
       "reminders": "Reminders"
     }
+  },
+  "learn": {
+    "back": "Today",
+    "loading": "Preparing your wird…",
+    "info": "Page {page} · ayahs {ayahs}",
+    "pageOnly": "Page {page}",
+    "ayahOf": "ayah {n} of {total}",
+    "pieceOf": "part {n} of {total}",
+    "goTo": "Go to ayah {n}",
+    "partOf": {
+      "third": "Third {n} of {total}",
+      "half": "Half {n} of {total}"
+    },
+    "steps": {
+      "read": "Read",
+      "memory": "Memory",
+      "join": "Whole ayah",
+      "link": "Link"
+    },
+    "aya": [
+      "Read it {n} times looking",
+      "Now {n} times without looking",
+      "Looking again, {n} times",
+      "And {n} more from memory"
+    ],
+    "join": {
+      "bubble": "Now the whole ayah, from memory"
+    },
+    "link": {
+      "bubble": "Now all of it, from memory"
+    },
+    "read": {
+      "tap": "Tap as you read"
+    },
+    "memory": {
+      "tap": "Tap as you recite",
+      "peek": "Take a peek",
+      "hide": "Hide again"
+    },
+    "done": {
+      "title": "Finished!",
+      "bubble": "Ma sha Allah, you finished it!"
+    },
+    "credits": "Text and translation: Quran Foundation (Quran.com)",
+    "translationBy": "Translation by {name}",
+    "translationNote": "The translation helps you understand what you memorize. To repeat, switch back to Arabic or transliteration.",
+    "translationBubble": "Now you know what it means",
+    "error": {
+      "title": "We couldn't load the Quran",
+      "text": "Check your internet connection. If you are developing, check the Quran Foundation keys in .env.local."
+    },
+    "view": "How to show the text",
+    "views": {
+      "arabic": "Arabic",
+      "latin": "Transliteration",
+      "translation": "Translation"
+    }
   }
 }
